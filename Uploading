@@ -1,0 +1,26 @@
+# Load the necessary library
+library(shiny)
+
+# Define the UI
+ui <- fluidPage(
+  titlePanel("Upload a File to Posit Cloud"),
+  fileInput("file", "Choose a file to upload"),
+  actionButton("upload", "Upload")
+)
+
+# Define the server function
+server <- function(input, output) {
+  observeEvent(input$upload, {
+    if (!is.null(input$file)) {
+      # Save the uploaded file to a specific directory in Posit Cloud
+      save_path <- file.path("path/to/your/directory", input$file$name)
+      saveRDS(input$file$datapath, save_path)
+      cat("File uploaded successfully to", save_path, "\n")
+    } else {
+      cat("Please select a file to upload.\n")
+    }
+  })
+}
+
+# Run the Shiny app
+shinyApp(ui, server)
